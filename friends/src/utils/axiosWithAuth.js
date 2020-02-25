@@ -3,10 +3,20 @@ import axios from 'axios';
 export const axiosWithAuth = () => {
     const token  = window.localStorage.getItem('token');
 
+    if(token === "undefined") {
+        console.log("NOT LOGGED IN");
+    }else{
+        console.log("LOGGED IN ", {
+            'Content-Type': 'application/json',
+            'Authorization': `${token}`,
+        });
+    }
+
     return axios.create({
         headers: {
-            authorization: token
+            'Content-Type': 'application/json',
+            'Authorization': `${token}`
         },
-        basURL: 'http://localhost:5000'
+        baseURL: 'http://localhost:5000'
     })
 }

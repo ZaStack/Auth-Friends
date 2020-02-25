@@ -1,28 +1,20 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 
-import Login from './login';
-
-const App = () => {
+const PrivateRoute = ({ component: Component, ...rest }) => {
+    const token = window.localStorage.getItem('token');
     return (
-        <Router>
-            <div className='App'>
-                <ul>
-                    <li>
-                        <Link to='/login'>Login</Link>
-                    </li>
-                    <li>
-                        <Link to='/protected'>Protected Page</Link>
-                    </li>
-                </ul>
-                <Switch>
-                    <PrivateRoute exact path='/protected' component={ChangeThis} />
-                    <Route path='/login' component={Login} />
-                    <Route component={Login} />
-                </Switch>
-            </div>
-        </Router>
-    );
-};
+        <Route
+            {...rest}
+            render={props => {
+                if (token) {
+                    return <Component {...props} />
+                } else {
+                    return <Redirect to='/login' />
+                }
+            }}
+        />
+    )
+}
 
-export default App;
+export default PrivateRoute;
